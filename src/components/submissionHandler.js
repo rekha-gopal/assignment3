@@ -1,13 +1,27 @@
-// components/submissionHandler.js
+import { ref, uploadBytes } from "firebase/storage";
+import { storage } from "../src/firebaseConfig"; // adjust if your path is different
 
-export default function handleFormSubmission(e) {
-  e.preventDefault();
+export default async function handleFormSubmission(event) {
+  event.preventDefault();
 
-  // Increment submission count
-  let count = localStorage.getItem('submissionCount');
-  count = count ? parseInt(count) + 1 : 1;
-  localStorage.setItem('submissionCount', count);
+  const meal = event.target.meal.value;
+  const calories = event.target.calories.value;
 
-  // Optionally: show feedback or reset form
-  alert("Meal submitted!");
+  const fileContent = `Meal: ${meal}, Calories: ${calories}`;
+  const blob = new Blob([fileContent], { type: "text/plain" });
+
+  const filename = `meals/${Date.now()}-${meal}.txt`;
+  const fileRef = ref(storage, filename);
+
+  try {
+    await uploadBytes(fileRef, blob);
+    alert("✅ Meal data uploaded successfully!");
+  } catch (error) {
+    console.error("❌ Upload error:", error);
+    alert("Upload failed. Check the console.");
+  }
+
+  // Update user stats in localStorage
+  const active = parseInt(localStorage.getItem("activeUsers") || "0") + 1;
+  localStorage.setItem("activeUsers", active.toString());
 }
