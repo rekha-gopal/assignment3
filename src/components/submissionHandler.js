@@ -1,5 +1,6 @@
 import { ref, uploadBytes } from "firebase/storage";
-import { storage } from "../src/firebaseConfig"; // adjust if your path is different
+import { storage } from "../lib/firebaseConfig";
+ // adjust if your path is different
 
 export default async function handleFormSubmission(event) {
   event.preventDefault();
