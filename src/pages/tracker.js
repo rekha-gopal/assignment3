@@ -1,5 +1,3 @@
-// pages/tracker.js
-
 import React from "react";
 import TrackerPage from "../components/TrackerPage";
 

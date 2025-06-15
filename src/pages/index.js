@@ -1,3 +1,4 @@
+// pages/index.js
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
@@ -9,14 +10,16 @@ export default function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (!username || !password || !age) return;
     if (parseInt(age) > 120) {
-      alert("Please enter a valid age (below 120). ");
+      alert("❌ Please enter a valid age below 120.");
       return;
     }
+
     const user = { username, password, age };
     localStorage.setItem('userInfo', JSON.stringify(user));
-    router.push('/score');
+    router.push('/tracker'); // ✅ Navigate to tracker
   };
 
   return (

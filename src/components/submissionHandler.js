@@ -1,28 +1,38 @@
-import { ref, uploadBytes } from "firebase/storage";
-import { storage } from "../lib/firebaseConfig";
- // adjust if your path is different
+// components/submissionHandler.js
+import db from "../lib/firebaseConfig"; // Correct import path
+import { ref, push } from "firebase/database";
 
-export default async function handleFormSubmission(event) {
-  event.preventDefault();
+export default function handleFormSubmission(e) {
+  e.preventDefault();
 
-  const meal = event.target.meal.value;
-  const calories = event.target.calories.value;
+  const meal = e.target.meal.value;
+  const calories = e.target.calories.value;
 
-  const fileContent = `Meal: ${meal}, Calories: ${calories}`;
-  const blob = new Blob([fileContent], { type: "text/plain" });
-
-  const filename = `meals/${Date.now()}-${meal}.txt`;
-  const fileRef = ref(storage, filename);
-
-  try {
-    await uploadBytes(fileRef, blob);
-    alert("✅ Meal data uploaded successfully!");
-  } catch (error) {
-    console.error("❌ Upload error:", error);
-    alert("Upload failed. Check the console.");
+  if (!meal || !calories) {
+    alert("Please fill in all fields");
+    return;
   }
 
-  // Update user stats in localStorage
-  const active = parseInt(localStorage.getItem("activeUsers") || "0") + 1;
-  localStorage.setItem("activeUsers", active.toString());
+  const mealData = {
+    meal,
+    calories,
+    timestamp: new Date().toISOString(),
+  };
+
+  // Push to Firebase
+  const mealRef = ref(db, "meals");
+  push(mealRef, mealData)
+    .then(() => {
+      alert("Meal submitted successfully!");
+      // Optionally reset the form
+      e.target.reset();
+
+      // You can update localStorage or navigation here
+      let active = parseInt(localStorage.getItem("activeUsers") || "0");
+      localStorage.setItem("activeUsers", active + 1);
+    })
+    .catch((error) => {
+      console.error("Firebase write error:", error);
+      alert("Error submitting meal");
+    });
 }

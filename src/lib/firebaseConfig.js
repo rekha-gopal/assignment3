@@ -1,15 +1,23 @@
-// src/firebaseConfig.js
-import { initializeApp } from "firebase/app";
-import { getStorage } from "firebase/storage";
+// lib/firebaseConfig.js
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
+// ✅ Replace these with your actual Firebase project config values
 const firebaseConfig = {
-  apiKey: "AIzaSyAIZBFF2EPJ31fhdadMhg_MiDSPrxivKEk",
-  authDomain: "ratemyroutine.firebaseapp.com",
-  projectId: "ratemyroutine",
-  storageBucket: "ratemyroutine.appspot.com",
-  messagingSenderId: "791603545525",
-  appId: "1:791603545525:web:87ec6e60fcccf4919b85fc",
+  apiKey: "AIzaSyAZDD1-pHPQWC_k67mxyej62YxVuKn1I7g",
+  authDomain: "nutrition-tracking-system.firebaseapp.com",
+  projectId: "nutrition-tracking-system",
+  storageBucket: "nutrition-tracking-system.firebasestorage.app",
+  messagingSenderId: "1028146397978",
+  appId: "1:1028146397978:web:631f2aab424b810d20a2a3",
+  measurementId: "G-EDQWFHVYYM"
 };
-
+// Initialize Firebase only once
 const app = initializeApp(firebaseConfig);
-export const storage = getStorage(app);
+
+// Firestore DB and Auth
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+export { db, auth };
